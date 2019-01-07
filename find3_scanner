@@ -1,0 +1,37 @@
+#!/bin/sh /etc/rc.common
+
+USE_PROCD=1
+START=90
+
+URL=https://cloud.internalpositioning.com
+FAMILY=
+FIFO=/tmp/logfile
+
+find_monitor() {
+  local phys=$(ls /sys/class/ieee80211/)
+  for phy in $phys; do
+    local type=$(cat /sys/class/ieee80211/$phy/device/net/*/type)
+    if [ $type -ne 1 -a $type -ne 0 ]; then
+      IFACE=$(ls /sys/class/ieee80211/$phy/device/net)
+    fi
+  done
+}    
+
+start_service() {
+  find_monitor 
+  [ ! -z $IFACE ] || echo "No interfaces found in monitor mode. Bailing out." && return 1
+  
+  procd_open_instance tcpdump
+  procd_set_param command tcpdump -l -i $IFACE -e -s 256 type mgt subtype probe-req
+  procd_set_param stdout 1 # forward to logread
+  procd_set_param stderr 1 # same for stderr
+  procd_close_instance
+
+  [ ! -f $FIFO ] || echo "No system log file found. Configure logd output in /etc/config/system first" && return 1
+  procd_open_instance find3_cli_scanner
+  procd_set_param command python3 /root/passivescan.py -i $FIFO -f $FAMILY -u $URL
+  procd_set_param respawn ${respawn_threshold:-3600}
+  procd_set_param stdout 1
+  procd_set_param stderr 1
+  procd_close_instance
+}
