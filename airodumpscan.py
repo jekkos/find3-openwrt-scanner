@@ -9,6 +9,7 @@ import urllib.request
 import time
 import socket
 import sched
+import ssl
 
 def main():
     parser = argparse.ArgumentParser(description="Submit find3 passive scan results")
@@ -17,6 +18,7 @@ def main():
     parser.add_argument("-f", dest="family", required=True, help="The find3 family identifier")
     parser.add_argument("-i", dest="inputfile", required=True, type=lambda file: is_valid_file(parser, file), help="The csv file in which airodump writes the scan results")
     args = parser.parse_args()
+    ssl._create_default_https_context = ssl._create_unverified_context
     s = sched.scheduler(time.time, time.sleep)
     parser = SignalParser(args.inputfile, args.family, args.url, args.interval, s)
     parser.poll()
