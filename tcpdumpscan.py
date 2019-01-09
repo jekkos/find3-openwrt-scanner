@@ -17,7 +17,7 @@ def main():
     parser = argparse.ArgumentParser(description="Submit find3 passive scan results")
     parser.add_argument("-u", dest="url", required=False, help="The find3 REST endpoint url", default="https://cloud.internalpositioning.com")
     parser.add_argument("-i", dest="fifo", required=False, help="Tcpdump output.file location. Point this to OpenWrt logfile if using procd", default="/tmp/logfile")
-    parser.add_argument("-f", dest="family", required=False, help="The find3 family identifier")
+    parser.add_argument("-f", dest="family", required=True, help="The find3 family identifier")
     args = parser.parse_args()
     ssl._create_default_https_context = ssl._create_unverified_context
     parser = SignalParser(args.family, args.url, args.fifo)
@@ -67,7 +67,7 @@ class SignalParser():
 
                     last_seen = datetime.strptime(rows[0].strip(), "%H:%M:%S.%f")
                     last_seen = datetime.combine(datetime.today(), last_seen.time())
-                    power = re.match(r".*(-?\d+)dBm", row).group(1)
+                    power = re.match(r".*(-\d+|0)dBm", row).group(1)
                     station = re.match(r".*SA:(.*?)\s", row).group(1)
                     stations[station] = power
                     print("Found %s with signal power of %s dBm at %s" % (station, power, last_seen))

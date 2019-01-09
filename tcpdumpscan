@@ -8,7 +8,7 @@ FAMILY=
 FIFO=/tmp/logfile
 
 start_service() {
-  [ ! -f $FIFO ] || echo "No system log file found. Configure logd output in /etc/config/system first" && return 1
+  [ -f $FIFO ] || (echo "No system log file found. Configure logd output in /etc/config/system first" && return 1)
 
   procd_open_instance tcpdumpscan
   procd_set_param command python3 /root/tcpdumpscan.py -i $FIFO -u $URL
