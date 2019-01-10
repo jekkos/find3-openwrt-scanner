@@ -2,7 +2,7 @@
 
 import encodings.idna
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 import os.path
 import urllib.request
@@ -67,14 +67,15 @@ class SignalParser():
 
                     last_seen = datetime.strptime(rows[0].strip(), "%H:%M:%S.%f")
                     last_seen = datetime.combine(datetime.today(), last_seen.time())
-                    power = re.match(r".*(-\d+|0)dBm", row).group(1)
-                    station = re.match(r".*SA:(.*?)\s", row).group(1)
-                    stations[station] = power
-                    print("Found %s with signal power of %s dBm at %s" % (station, power, last_seen))
-                    elapsed = datetime.now() - start
-                    if (len(stations) > 0):
-                        self.send_payload(stations)
-                        stations = {}
+                    if (datetime.today() - timedelta(seconds=20) < last_seen):
+                        power = re.match(r".*(-\d+|0)dBm", row).group(1)
+                        station = re.match(r".*SA:(.*?)\s", row).group(1)
+                        stations[station] = power
+                        print("Found %s with signal power of %s dBm at %s" % (station, power, last_seen))
+                        elapsed = datetime.now() - start
+                        if (len(stations) > 0):
+                            self.send_payload(stations)
+                            stations = {}
 
         except Exception as e :
             sys.stdout.flush()
