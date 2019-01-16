@@ -33,15 +33,8 @@ This will add the needed config section to the `/etc/config/wireless` configurat
 You need to setup tcpdump and the needed python packages so you can submit fingerprints to the find3 server. 
 
 * Enter following commnad `opkg install tcpdump python3-codecs python3-light python3-email python3-openssl`
-* Adapt the `URL` and `FAMILY` variables and Copy the `tcpdump` and `tcpdumpscan` procd init scripts to `/etc/init.d` using scp.
-* Finally type `/etc/init.d/tcpdump enable` and `/etc/init.d/tcpdumpscan enable` to enable both on startup.
-
-To make the tcpdump output available for the python script, configure `/etc/config/system` as follows
-
-```
-config system
-  option log_file '/tmp/logfile'
-```
+* Adapt the `URL` and `FAMILY` variables and Copy the `tcpdumpscan` procd init script to `/etc/init.d` using scp.
+* Finally type `/etc/init.d/tcpdumpscan enable` to enable both on startup.
 
 Log output can be monitored using `logread` in the router's SSH session.
 
