@@ -37,8 +37,8 @@ class SignalParser():
         self.url = url
         self.iface = iface
 
-    def send_payload(self, stations):
-        payload = self.build_payload(stations)
+    def send_payload(self, stations, last_seen):
+        payload = self.build_payload(stations, last_seen)
         clen = len(payload)
         headers = {'Content-Type': 'application/json', 'Content-Length': clen}
         req = urllib.request.Request(self.url + '/passive', payload, headers, method='POST')
@@ -47,9 +47,9 @@ class SignalParser():
         print("response: %s" % response)
         f.close()
 
-    def build_payload(self, stations):
+    def build_payload(self, stations, last_seen):
         body = {'f': self.family}
-        body['t'] = int(time.time())
+        body['t'] = int(last_seen.time())
         body['d'] = socket.gethostname()
         body['s']  = {'wifi': stations}
         return str(json.dumps(body)).encode('utf8')
@@ -74,7 +74,7 @@ class SignalParser():
                 print("Found %s with signal power of %s dBm at %s" % (station, power, last_seen))
                 elapsed = datetime.now() - start
                 if (len(stations) > 0):
-                    self.send_payload(stations)
+                    self.send_payload(stations, last_seen)
                     stations = {}
 
             except Exception as e :
