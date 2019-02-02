@@ -8,8 +8,8 @@ find3 server backend.
 
 ## Requirements ##
 
-First make sure you find a usb dongle that has monitor mode enabled on OpenWrt. For this I used an rtl8192cu chipset. 
-These are tiny, cheap and small and can be ordered in your local electronics shop. For example a 8188cus dongle should work.
+First make sure you find a usb dongle that has monitor mode enabled on OpenWrt. For this I used an rtl8192cu chipset which can be found
+in those rtl8818cus dongles, which became very popular for use with a raspberry pi.  
 
 You can choose to run the scanner using `airodump-ng` or `tcpdump`. 
 Initially I wanted to use airodump but for some reason it always stopped the packet capture (probably a driver issue). This issue was caused
@@ -46,10 +46,23 @@ This setup might give you more control on how the wifi driver behaves in monitor
 
 * Finally type `/etc/init.d/airodump enable` and `/etc/init.d/airodumpscan enable` to enable both on startup.
 
-### Setup collectd ###
+### collectd ###
 Not needed for find3 but nice as an addon to use with grafana and influxdb
 
 ```
 opkg install collectd-mod-network collectd-mod-uptime collectd-mod-interface collectd-mod-memory collectd-mod-cpu collectd-mod-load collectd-mod-iwinfo
 /etc/init.d/collectd enable
 ```
+
+## Full b-1300 image ##
+As I was doing multiple iterations of combining the correct packages, I built my own openwrt from scratch. The config file in `diffconfig` version which
+can be easily used to build newer versions of OpenWrt with the same additional packages. The config contains all required python and colletd packages, as well 
+as the rtl8192cu wifi kernel driver.
+
+Just copy the `b1300defconfig` file to your OpenWrt root folder
+* Type `cat b1300defconfig >> .config`. 
+* Next hit `make defconfig` to create a full build config with this diff applied
+* Type `make V=j` to build the image 
+* scp `openwrt-ipq40xx-glinet_gl-b1300-squashfs-sysupgrade.bin` to `/tmp` on the router
+* Open a shell to the router and hit `sysupgrade /tmp/openwrt-ipq40xx-glinet_gl-b1300-squashfs-sysupgrade.bin`
+

@@ -49,7 +49,7 @@ class SignalParser():
 
     def build_payload(self, stations, last_seen):
         body = {'f': self.family}
-        body['t'] = int(last_seen.time())
+        body['t'] = int(last_seen.timestamp())
         body['d'] = socket.gethostname()
         body['s']  = {'wifi': stations}
         return str(json.dumps(body)).encode('utf8')
