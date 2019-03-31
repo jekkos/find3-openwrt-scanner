@@ -76,10 +76,10 @@ class SignalParser():
                     if start_read:
                         last_seen = datetime.strptime(row[2].strip(), "%Y-%m-%d %H:%M:%S")
                         if last_seen > self.last_request:
-                            power = row[3].strip()
+                            power = int(row[3].strip())
                             station = row[0].strip().lower()
                             stations[station] = power
-                            print("Found %s with signal power of %s dBm at %s" % (station, power, last_seen))
+                            print("Found %s with signal power of %d dBm at %s" % (station, int(power), last_seen))
                         self.last_request = datetime.now()
                     if row[0] == "Station MAC":
                         start_read = True

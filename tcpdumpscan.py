@@ -70,8 +70,8 @@ class SignalParser():
                 last_seen = datetime.combine(datetime.today(), last_seen.time())
                 power = re.match(r".*(-\d+|0)dBm", row).group(1)
                 station = re.match(r".*SA:(.*?)\s", row).group(1)
-                stations[station] = power
-                print("Found %s with signal power of %s dBm at %s" % (station, power, last_seen))
+                stations[station] = int(power)
+                print("Found %s with signal power of %d dBm at %s" % (station, int(power), last_seen))
                 elapsed = datetime.now() - start
                 if (len(stations) > 0):
                     self.send_payload(stations, last_seen)
