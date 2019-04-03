@@ -73,7 +73,7 @@ class SignalParser():
                 stations[station] = int(power)
                 print("Found %s with signal power of %d dBm at %s" % (station, int(power), last_seen))
                 elapsed = datetime.now() - start
-                if (len(stations) > 0 and int(power) > 0):
+                if (len(stations) > 0 and int(power) != 0):
                     self.send_payload(stations, last_seen)
                     stations = {}
 
