@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
-import encodings.idna
 import argparse
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 import os.path
 import urllib.request
@@ -11,7 +10,6 @@ import socket
 import sys
 import re
 import ssl
-import select
 import subprocess
 
 def main():
@@ -81,7 +79,6 @@ class SignalParser():
                 time.sleep(0.02)
                 sys.stdout.flush()
                 print("Failed to read from tcpdump: %s" % (str(e)))
-                pass
 
 if __name__ == "__main__":
     main()
