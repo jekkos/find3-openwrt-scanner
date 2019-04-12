@@ -54,15 +54,13 @@ opkg install collectd-mod-network collectd-mod-uptime collectd-mod-interface col
 /etc/init.d/collectd enable
 ```
 
-## b-1300 OpenWrt build config ##
-Upgrading vanilla OpenWrt snapshots on the router is quite time intensive. After you install a new snapshot, you need to add the python and other packages again manually.
-Also my router was using mesh functionality from `wpad-mesh` which is not in the default images. This meant that after every upgade the router lost internet connection.
-So I decided to include all packages in my own build. The config file in `diffconfig` version which
-can be easily used to build newer versions of OpenWrt with the same additional packages. The config contains all required python and colletd packages, as well 
-as the rtl8192cu wifi kernel driver.
+## OpenWrt b-1300 & wr703n 8Mb build config ##
+Upgrading vanilla OpenWrt snapshots on the router is quite time intensive. After you install a new snapshot, you need to add the python and other packages again manually.  Also this setup is using mesh functionality from `wpad-mesh` which is not in a default OpenWrt build. This meant that after every upgade the router lost internet connection.  In this case it's easier to include all package upfront in the root filesystem. The config file in `diffconfig` version which can be easily used to build newer versions of OpenWrt with the same additional packages. The config contains all required python and colletd packages, as well as the rtl8192cu wifi kernel driver.
 
-Just copy the `b1300defconfig` file to your OpenWrt root folder
-* Type `cat b1300defconfig >> .config`. 
+Just copy the `b1300defconfig` or `wr703ndeconfig` file to your OpenWrt root folder. Mind that the latter requires a 8Mb flash.
+
+* In case you want to build for wr703n apply the patch first using `git apply wr703n-8Mb.patch`
+* Type `cat b1300defconfig >> .config` or `cat wr703ndefconfig >> .config` depending on your router model
 * Next hit `make defconfig` to create a full build config with this diff applied
 * Type `make V=j` to build the image 
 * scp `openwrt-ipq40xx-glinet_gl-b1300-squashfs-sysupgrade.bin` to `/tmp` on the router
