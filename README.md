@@ -34,9 +34,22 @@ You need to setup tcpdump and the needed python packages so you can submit finge
 
 * Enter following commnad `opkg install tcpdump python3-codecs python3-light python3-email python3-openssl`
 * Adapt the `URL` and `FAMILY` variables and Copy the `tcpdumpscan` procd init script to `/etc/init.d` using scp.
+* Copy the tcpdumpscan.py using scp to `/root` directory
+* type `/etc/init.d/tcpdumpscan start` to start scanning
 * Finally type `/etc/init.d/tcpdumpscan enable` to enable both on startup.
 
 Log output can be monitored using `logread` in the router's SSH session.
+
+### tcpdump + ash scanner ###
+If you are on a more constrained device, then using OpenWrt binaries + some shell scripts might be most appropriate. In my case WR703n router
+was not powerful enough to run the scripts in python3. Only dependencies here are libubox (preinstalled), tcpdump and curl
+
+* Install curl + tcpdump using `opkg install tcpdump curl`
+* Adapt the `URL` and `FAMILY` variables and Copy the `tcpdumpscan` procd init script to `/etc/init.d` using scp.
+* Change the startup script in `/etc/init.d/tcpdumpscan` to launch `/root/tcpdumpscan.sh` instead
+* Copy the tcpdumpscan.sh using scp to `/root` directory
+* type `/etc/init.d/tcpdumpscan start` to start scanning
+* Finally type `/etc/init.d/tcpdumpscan enable` to enable both on startup.
 
 ### airodump-ng + python scanner ###
 This setup might give you more control on how the wifi driver behaves in monitor mode by using specific airodump-ng parameters.
