@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta charset="UTF-8"> 
+        <link rel="stylesheet" 
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+              crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" 
+                integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            $(function() {
+
+                var $head = $('<tr>').append(
+                    $('<th>').attr('scope', 'col').text('Name'),
+                    $('<th>').attr('scope', 'col').text('Last Seen'),
+                    $('<th>').attr('scope', 'col').text('Location')
+                );
+                $head.appendTo('thead');
+
+                var message = {{&payload}};
+
+                $.each(message.payload, function(i, item) {
+                    var lastSeen = Date.parse(item.lastSeen);
+                    var yesterday = new Date() - 24 * 3600 * 1000;
+
+                    if (lastSeen > yesterday) {
+                        var $body = $('<tr>').append(
+                            $('<td>').text(item.name),
+                            $('<td>').text(item.lastSeen.replace(/T/, ' ').replace(/\..+/, '')),
+                            $('<td>').text(item.location)
+                        ); 
+                        $body.appendTo('tbody');
+                    }
+
+                });
+            });
+        </script>
+        <div class="table-responsive table-striped">
+            <table class="table">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </body>
+    
+</html>
