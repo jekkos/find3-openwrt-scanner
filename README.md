@@ -15,7 +15,17 @@ You can choose to run the scanner using `airodump-ng` or `tcpdump`.
 Initially I wanted to use airodump but for some reason it always stopped the packet capture (probably a driver issue). This issue was caused
 by the alternative ieee80211 rtl8xxx linux driver that did not seem to be very stable for my specific hardware.
 
+The scripts can now also be installed using a prepackaged ipk added here in the (release)[https://github.com/jekkos/find3-openwrt-scanner/releases/tag/v1] section.
+
 ## Configuration ##
+
+## OpenWrt build instructions ##
+
+If you want to include these scripts in your custom OpenWrt build, you should do the following
+
+* Open `feed.conf.default` the Openwrt repository folder and add `src-git find3 https://github.com/jekkos/find3-openwrt-scanner.git` to the bottom of the file. 
+* Then type `./scripts/feeds update find3 && ./scripts/feeds install`
+* When this command is completed, you should see a new entry under the `Utilities` section after starting `make menuconfig`. Then choose to include in the base image or to build as a package only.
 
 ### wireless driver + monitor mode ###
 To enable the dongle in OpenWrt, first install the wifi driver 
@@ -44,11 +54,11 @@ Log output can be monitored using `logread` in the router's SSH session.
 If you are on a more constrained device, then using OpenWrt binaries + some shell scripts might be most appropriate. In my case WR703n router
 was not powerful enough to run the scripts in python3. Only dependencies here are libubox (preinstalled), tcpdump and curl
 
-* Install curl + tcpdump using `opkg install tcpdump curl`
-* Adapt the `URL` and `FAMILY` variables and Copy the `tcpdumpscan` procd init script to `/etc/init.d` using scp.
-* Change the startup script in `/etc/init.d/tcpdumpscan` to launch `/root/tcpdumpscan.sh` instead
-* Copy the tcpdumpscan.sh using scp to `/root` directory
-* type `/etc/init.d/tcpdumpscan start` to start scanning
+* Install curl + tcpdump using `opkg update && opkg install tcpdump curl`
+* Copy the `find3_1_all.ipk` file in the (release)[https://github.com/jekkos/find3-openwrt-scanner/releases/tag/v1] section to the device using `scp find3_1_all.ipk root@<ip>:/tmp
+* Open an SSH session to the device and install using `opkg install /tmp/find3_1_all.ipk'
+* Adapt the `URL` and `FAMILY` variables in `/etc/config/tcpdumpscan`.
+* Enter `/etc/init.d/tcpdumpscan restart` to start scanning
 * Finally type `/etc/init.d/tcpdumpscan enable` to enable both on startup.
 
 ### airodump-ng + python scanner ###
