@@ -12,7 +12,7 @@ find_monitor() {
      local phys=$(ls /sys/class/ieee80211/)
      for phy in $phys; do
        local type=$(cat /sys/class/ieee80211/$phy/device/net/*/type)
-       if [ $type -ne 1 -a $type -ne 0 ]; then
+       if [ $type -gt 1 ]; then
          IFACE=$(ls /sys/class/ieee80211/$phy/device/net)
        fi
      done
@@ -21,7 +21,10 @@ find_monitor() {
 
 start_service() {
   find_monitor 
-  ([ ! -z "$IFACE" ] && [ "$IFACE" == 'auto' ]) || (echo "No interfaces found in monitor mode. Bailing out." && exit 1)
+  if [ -z "$IFACE" ] || [ "$IFACE" == 'auto' ]; then
+      echo "No interfaces found in monitor mode. Bailing out."
+      exit 1;
+  fi
 
   procd_open_instance tcpdumpscan
   procd_set_param command sh /usr/lib/tcpdumpscan.sh -i $IFACE -u $URL -f $FAMILY
