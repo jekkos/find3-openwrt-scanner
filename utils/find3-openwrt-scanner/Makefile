@@ -7,7 +7,7 @@ PKG_MAINTAINER:=Jeroen Peelaerts <jpeelaer@jpeelaer.net>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/find3
+define Package/find3-openwrt-scanner
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=Find3 CLI scanner
@@ -16,7 +16,7 @@ define Package/find3
   DEPENDS:=+tcpdump +curl
 endef
 
-define Package/find3/description
+define Package/find3-openwrt-scanner/description
   FIND attempts to simplify internal positioning. 
   Internal positioning, simplified Using FIND, 
   and only your smartphone or laptop, you will be able to pinpoint your position in your home or office.
@@ -28,7 +28,7 @@ endef
 define Build/Compile
 endef
 
-define Package/find3/install
+define Package/find3-openwrt-scanner/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_BIN) ./files/tcpdumpscan.sh $(1)/usr/lib
 	$(INSTALL_DIR) $(1)/etc/init.d 
@@ -37,7 +37,7 @@ define Package/find3/install
 	$(INSTALL_CONF) ./files/tcpdumpscan.config $(1)/etc/config/tcpdumpscan
 endef 
 
-define Package/find3/conffiles
+define Package/find3-openwrt-scanner/conffiles
 /etc/config/tcpdumpscan
 endef
 
