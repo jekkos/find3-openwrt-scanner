@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=find3
-PKG_RELEASE:=1
+PKG_NAME:=find3-openwrt-scanner
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=Jeroen Peelaerts <jpeelaer@jpeelaer.net>
 
@@ -41,4 +41,4 @@ define Package/find3-openwrt-scanner/conffiles
 /etc/config/tcpdumpscan
 endef
 
-$(eval $(call BuildPackage,find3))
+$(eval $(call BuildPackage,find3-openwrt-scanner))
